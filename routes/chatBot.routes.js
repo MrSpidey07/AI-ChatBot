@@ -9,7 +9,7 @@ const groq = new Groq({
 const router = express.Router();
 
 router.get("/", (req, res) => {
-  res.render("chatArea");
+  res.render("chatArea", { response: null });
 });
 
 router.post("/send", async (req, res) => {
@@ -25,7 +25,7 @@ router.post("/send", async (req, res) => {
   });
 
   const response = completion.choices[0].message.content;
-  res.send(response);
+  res.render("chatArea", { response });
 });
 
 export default router;
