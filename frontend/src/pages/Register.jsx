@@ -23,6 +23,7 @@ const Register = () => {
 
   const { signup, isSigningUp } = useAuthStore();
 
+  //TO-Do: Strong Password Validation
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (formData.fullName.length < 4)

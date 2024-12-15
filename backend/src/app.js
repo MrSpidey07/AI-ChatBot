@@ -26,7 +26,7 @@ app.use(
 
 //Routes
 app.use("/api/auth", authRouter);
-app.use("/api/chat", chatbotRouter);
+app.use("/api", chatbotRouter);
 
 //Homepage
 // app.get("/", (req, res) => {
