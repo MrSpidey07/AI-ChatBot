@@ -7,7 +7,8 @@ dotenv.config();
 //TO-DO: Add Dynamic Title , Real-time Update Socket.io and Model Testing
 
 export const createChat = async (req, res) => {
-  const { userId, chatId, message } = req.body;
+  const userId = req.user._id.toString();
+  const { chatId, message } = req.body;
 
   try {
     if (!userId || !message) {
@@ -18,7 +19,7 @@ export const createChat = async (req, res) => {
 
     let chatSession;
 
-    if (chatId) {
+    if (chatId && chatId !== null) {
       chatSession = await Chat.findOne({ chatId, userId });
 
       if (!chatSession) {
@@ -26,7 +27,7 @@ export const createChat = async (req, res) => {
       }
     } else {
       const newChatId = uuidv4();
-      chatSession = chatSession = new Chat({
+      chatSession = new Chat({
         chatId: newChatId,
         userId,
         messages: [],
@@ -34,24 +35,37 @@ export const createChat = async (req, res) => {
       });
     }
 
-    chatSession.messages.push({ role: "user", content: message });
+    const userMessage = {
+      role: "user",
+      content: message,
+    };
+
+    chatSession.messages.push(userMessage);
 
     const groq = new Groq({
       apiKey: process.env.GROQ_KEY,
     });
 
+    const formattedMessages = chatSession.messages.map((m) => ({
+      role: m.role,
+      content: m.content,
+    }));
+
     const groqResponse = await groq.chat.completions.create({
-      messages: chatSession.messages.map((m) => ({
-        role: m.role,
-        content: m.content,
-      })),
+      messages: formattedMessages,
       model: "llama3-8b-8192",
     });
 
     const aiResponse =
       groqResponse.choices[0]?.message?.content || "No response";
 
-    chatSession.messages.push({ role: "assistant", content: aiResponse });
+    // Ensure assistant message has both role and content
+    const assistantMessage = {
+      role: "assistant",
+      content: aiResponse,
+    };
+
+    chatSession.messages.push(assistantMessage);
 
     await chatSession.save();
 

@@ -12,10 +12,10 @@ const router = express.Router();
 router.post("/chat", protectedRoute, createChat);
 
 //Get Chat Sessions by UserId
-router.get("/chat/s", protectedRoute, getChatSessions);
+router.get("/chats/s", protectedRoute, getChatSessions);
 
 //Get Chat by Id
-router.post("/c/:chatId", protectedRoute, getChatHistory);
+router.post("/chat/c/:chatId", protectedRoute, getChatHistory);
 
 // router.post("/send", async (req, res) => {
 //   const message = req.body.message.trim();
