@@ -23,7 +23,6 @@ const Register = () => {
 
   const { signup, isSigningUp } = useAuthStore();
 
-  //TO-Do: Strong Password Validation
   const validateForm = () => {
     if (!formData.fullName.trim()) return toast.error("Full name is required");
     if (formData.fullName.length < 4)
@@ -32,8 +31,12 @@ const Register = () => {
     if (!/\S+@\S+\.\S+/.test(formData.email))
       return toast.error("Invalid email format");
     if (!formData.password) return toast.error("Password is required");
-    if (formData.password.length < 6)
-      return toast.error("Password must be at least 6 characters");
+    const strongPasswordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    if (!strongPasswordRegex.test(formData.password))
+      return toast.error(
+        "Password must be at least 8 characters long, include an uppercase letter, a lowercase letter, a number, and a special character"
+      );
 
     return true;
   };

@@ -4,7 +4,7 @@ import Groq from "groq-sdk";
 import dotenv from "dotenv";
 dotenv.config();
 
-//TO-DO: Add Dynamic Title , Real-time Update Socket.io and Model Testing
+//TO-DO: Real-time Update Socket.io, Model Testing and optimize groq calling
 
 export const createChat = async (req, res) => {
   const userId = req.user._id.toString();
@@ -26,12 +26,39 @@ export const createChat = async (req, res) => {
         return res.status(400).json({ message: "Chat session not found" });
       }
     } else {
+      const titlePrompt = {
+        messages: [
+          {
+            role: "system",
+            content:
+              "Generate a very brief, concise title (max 40 characters) that captures the main topic or question from the user's message. Don't use quotes. Respond with just the title.",
+          },
+          {
+            role: "user",
+            content: message,
+          },
+        ],
+      };
+
+      const groq = new Groq({
+        apiKey: process.env.GROQ_KEY,
+      });
+
+      // Get title suggestion
+      const titleResponse = await groq.chat.completions.create({
+        ...titlePrompt,
+        model: "llama3-8b-8192",
+      });
+
+      const suggestedTitle =
+        titleResponse.choices[0]?.message?.content?.trim() || "New Chat";
+
       const newChatId = uuidv4();
       chatSession = new Chat({
         chatId: newChatId,
         userId,
         messages: [],
-        title: "New Chat",
+        title: suggestedTitle,
       });
     }
 

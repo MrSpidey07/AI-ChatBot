@@ -1,0 +1,36 @@
+<svg version="1.1" viewBox="61.40929535232384 297.98400000000004 156.5937031484258 175.104" id="svg342612" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" style="max-height: 500px" width="156.5937031484258" height="175.104">
+  <metadata id="metadata342618">
+    
+      
+        image/svg+xml
+        
+      
+    
+  </metadata>
+  <defs id="defs342616"/>
+  <linearGradient id="3d_gradient2-logo-adff83f0-c58e-4ef0-9100-8d29584607ea" x1="30%" y1="120%" x2="-10%" y2="30%" spreadMethod="pad">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" id="stop342593"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="1" id="stop342595"/>
+  </linearGradient>
+  <linearGradient id="3d_gradient3-logo-adff83f0-c58e-4ef0-9100-8d29584607ea" x1="30%" y1="120%" x2="-10%" y2="30%" spreadMethod="pad" gradientTransform="rotate(-30)">
+    <stop offset="0%" stop-color="#ffffff" stop-opacity="1" id="stop342598"/>
+    <stop offset="50%" stop-color="#cccccc" stop-opacity="1" id="stop342600"/>
+    <stop offset="100%" stop-color="#000000" stop-opacity="1" id="stop342602"/>
+  </linearGradient>
+  <g id="logo-group">
+    <image transform="translate(0 0)" style="display: none;" height="480" width="480" y="144" x="272" id="container" xlink:href=""/>
+    <g transform="translate(48.004833333333295 0)" id="logo-center">
+      <image y="0" x="0" style="display: none;" id="icon_container" xlink:href=""/>
+      <g transform="translate(0 0)" style="font-style:normal;font-weight:700;font-size:32px;line-height:1;font-family:'Brandmark1 Bold Color';font-variant-ligatures:none;text-align:center;text-anchor:middle" id="slogan"/>
+      <g transform="translate(0 0)" style="font-style:normal;font-weight:700;font-size:72px;line-height:1;font-family:'Brandmark1 Bold Color';font-variant-ligatures:normal;text-align:center;text-anchor:middle">
+        <g transform="translate(0 339.724) translate(50 -21.16000000000001) scale(2.3333333333333335) translate(-387.42537 53.64)" aria-label="E" id="path342621"> <path stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(305.60677 -125.55748)" d="M81.8186,128.08252h36.36279v-10.51367H81.8186V128.08252z M81.8186,105.47217h36.36279v-10.729H81.8186 V105.47217z M81.8186,71.91748v10.729h36.36279v-10.729H81.8186z" class="c1"/> </g>
+        <g transform="translate(0 339.724) translate(196.41666666666663 -21.16000000000001) scale(2.3333333333333335) translate(-430.17537 53.64)" aria-label="L" id="path342623"> <path stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(348.46492 -125.55772)" d="M81.71045,75.51782l11.30469-3.6001v45.43604h25.27441v10.72852h-36.5791V75.51782z" class="c1"/> </g>
+        <g transform="translate(0 339.724) translate(337.4389699999999 -21.16000000000001) scale(2.3333333333333335) translate(-470.6135 53.64)" aria-label="I" id="path342625"> <path stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(376.26609 -125.55748)" d="M94.34741,75.51758l11.30518-3.6001v56.16504H94.34741V75.51758z" class="c1"/> </g>
+        <g transform="translate(0 339.724) translate(423.32313666666664 -22.000000000000014) scale(2.3333333333333335) translate(-487.421 54)" aria-label="O" id="path342627"> <path stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(415.82774 -125.5935)" d="M88.93994,126.17456c-3.38477-1.43311-6.42285-3.47803-9.02979-6.08447 c-2.60645-2.60693-4.65137-5.64551-6.08447-9.02979c-1.4834-3.50684-2.23242-7.22949-2.23242-11.06006 s0.74902-7.55371,2.23242-11.06006c1.43311-3.38428,3.47803-6.42334,6.08447-9.02979 c2.60693-2.60645,5.64502-4.65137,9.02979-6.08447c3.50684-1.4834,7.22949-2.23242,11.05957-2.23242 c3.83105,0,7.55371,0.74902,11.06055,2.23242c3.38477,1.43311,6.42285,3.47803,9.0293,6.08447 c2.60742,2.60645,4.65234,5.64551,6.08496,9.02979c1.4834,3.50635,2.23242,7.22949,2.23242,11.06006 s-0.74902,7.55322-2.23242,11.06006c-1.43262,3.38428-3.47754,6.42285-6.08496,9.02979 c-2.60645,2.60645-5.64453,4.65137-9.0293,6.08447c-3.50684,1.4834-7.22949,2.23193-11.06055,2.23193 C96.16943,128.40649,92.44678,127.65796,88.93994,126.17456z M87.90283,87.9104c-3.2334,3.23291-5.01172,7.52441-5.01172,12.09717 c0,4.57227,1.77832,8.86377,5.01172,12.09668c3.2334,3.2334,7.52441,5.01172,12.09668,5.01172 c4.57324,0,8.86426-1.77832,12.09766-5.01172c3.23242-3.23291,5.01172-7.52441,5.01172-12.09668 c0-4.57275-1.7793-8.86426-5.01172-12.09717c-3.2334-3.23291-7.53223-5.01172-12.09766-5.01172 C95.43506,82.89868,91.13623,84.67749,87.90283,87.9104z" class="c1"/> </g>
+        <g transform="translate(0 339.724) translate(614.3385533333333 -21.16000000000001) scale(2.3333333333333335) translate(-549.28475 53.64)" aria-label="R" id="path342629"> <path stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(471.1888 -125.55748)" d="M121.90405,128.08252h-13.65918l-13.37109-19.27637V97.83984h2.16016 c3.40527,0,5.9541-0.74902,7.56738-2.23242c1.38281-1.27441,2.08105-3.11084,2.08105-5.47266 c0-2.4624-0.71973-4.33447-2.13867-5.55859c-1.4541-1.26025-3.75879-1.92969-6.64648-1.92969h-8.49609v45.43604H78.09595V71.91748 h20.66553c3.16113,0,6.0127,0.45361,8.48926,1.34619c2.44141,0.88574,4.5293,2.21094,6.20703,3.93164 c3.10352,3.18994,4.74512,7.71191,4.74512,13.0835c0,4.81738-1.33203,8.79932-3.95996,11.83789 c-1.8291,2.10986-4.24121,3.72266-7.2002,4.81006L121.90405,128.08252z" class="c1"/> </g>
+        <g transform="translate(0 339.724) translate(755.6863566666667 -21.16000000000001) scale(2.3333333333333335) translate(-589.86238 53.64)" aria-label="A" id="path342631"> <polygon stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(516.05452 -125.55748)" points="104.82788,71.91748 95.08569,71.91748 73.80786,128.08252 85.77515,128.08252 99.93921,89.14844 114.22534,128.08252 126.19214,128.08252" class="c1"/> <polygon stroke="#747fff" fill="#747fff" stroke-miterlimit="2" stroke-linejoin="miter" stroke-width="0" transform="translate(516.05452 -125.55748)" points="100.03819,128.08252 91.09854,114.24284 108.90146,114.24284" class="c3"/> </g>
+            </g>
+      <image y="0" x="0" style="display: none;" id="icon" xlink:href=""/>
+    </g>
+  </g>
+</svg>

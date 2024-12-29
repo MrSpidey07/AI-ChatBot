@@ -18,7 +18,7 @@ const NoChatSelected = () => {
         </div>
 
         {/* Welcome Text */}
-        <h2 className="text-2xl font-bold">Welcome to AI-Chatty!</h2>
+        <h2 className="text-2xl font-bold">Welcome to Eliora Chat!</h2>
         <p className="text-base-content/60">Developed By Meet Bodana</p>
       </div>
 
