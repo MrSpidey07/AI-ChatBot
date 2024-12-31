@@ -7,7 +7,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 dotenv.config();
 
-const port = process.env.PORT;
+const port = process.env.PORT || 5001;
 const app = express();
 
 //Middelwares
@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
   cors({
-    origin: "http://localhost:5173", // Frontend URL
+    origin: process.env.FRONTEND_URL || "http://localhost:5173", // Frontend URL
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"],
     credentials: true,
