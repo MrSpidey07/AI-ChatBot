@@ -1,99 +1,74 @@
-import Chat from "../models/chat.model.js";
-import { v4 as uuidv4 } from "uuid";
-import Groq from "groq-sdk";
-import dotenv from "dotenv";
-dotenv.config();
+// controllers/chat.controller.js
+import { ChatService } from "../services/chat.service.js";
+import { handleError, ChatError } from "../utils/error.handler.js";
 
-//TO-DO: Real-time Update Socket.io, Model Testing and optimize groq calling
+const chatService = new ChatService();
 
+// Get all chat sessions for a user
+export const getChatSessions = async (req, res) => {
+  const userId = req.user._id.toString();
+
+  try {
+    if (!userId) {
+      throw new ChatError("Please provide userId", 400);
+    }
+
+    const chatSessions = await chatService.getUserChats(userId);
+
+    if (!chatSessions || chatSessions.length === 0) {
+      throw new ChatError("No chat sessions found", 404);
+    }
+
+    res.status(200).json(chatSessions);
+  } catch (error) {
+    handleError(error, res);
+  }
+};
+
+// Get chat history for a specific chat
+export const getChatHistory = async (req, res) => {
+  const { chatId } = req.params;
+  const userId = req.user._id.toString();
+
+  try {
+    if (!chatId || !userId) {
+      throw new ChatError("Chat ID and User ID are required", 400);
+    }
+
+    const chatSession = await chatService.getChatById(userId, chatId);
+
+    if (!chatSession) {
+      throw new ChatError("Chat session not found or access denied", 404);
+    }
+
+    res.status(200).json(chatSession);
+  } catch (error) {
+    handleError(error, res);
+  }
+};
+
+// Create new chat or add message to existing chat
 export const createChat = async (req, res) => {
   const userId = req.user._id.toString();
   const { chatId, message } = req.body;
 
   try {
     if (!userId || !message) {
-      return res
-        .status(400)
-        .json({ message: "Please provide userId and message" });
+      throw new ChatError("Please provide userId and message", 400);
     }
 
-    let chatSession;
+    // Get or create chat session
+    let chatSession = await chatService.findOrCreateChat(userId, chatId);
 
-    if (chatId && chatId !== null) {
-      chatSession = await Chat.findOne({ chatId, userId });
-
-      if (!chatSession) {
-        return res.status(400).json({ message: "Chat session not found" });
-      }
-    } else {
-      const titlePrompt = {
-        messages: [
-          {
-            role: "system",
-            content:
-              "Generate a very brief, concise title (max 40 characters) that captures the main topic or question from the user's message. Don't use quotes. Respond with just the title.",
-          },
-          {
-            role: "user",
-            content: message,
-          },
-        ],
-      };
-
-      const groq = new Groq({
-        apiKey: process.env.GROQ_KEY,
-      });
-
-      // Get title suggestion
-      const titleResponse = await groq.chat.completions.create({
-        ...titlePrompt,
-        model: "llama3-8b-8192",
-      });
-
-      const suggestedTitle =
-        titleResponse.choices[0]?.message?.content?.trim() || "New Chat";
-
-      const newChatId = uuidv4();
-      chatSession = new Chat({
-        chatId: newChatId,
-        userId,
-        messages: [],
-        title: suggestedTitle,
-      });
+    // For new chats, generate title
+    if (!chatId) {
+      chatSession.title = await chatService.generateTitle(message);
     }
 
-    const userMessage = {
-      role: "user",
-      content: message,
-    };
+    // Process message and get AI response
+    chatSession = await chatService.processUserMessage(chatSession, message);
 
-    chatSession.messages.push(userMessage);
-
-    const groq = new Groq({
-      apiKey: process.env.GROQ_KEY,
-    });
-
-    const formattedMessages = chatSession.messages.map((m) => ({
-      role: m.role,
-      content: m.content,
-    }));
-
-    const groqResponse = await groq.chat.completions.create({
-      messages: formattedMessages,
-      model: "llama3-8b-8192",
-    });
-
-    const aiResponse =
-      groqResponse.choices[0]?.message?.content || "No response";
-
-    // Ensure assistant message has both role and content
-    const assistantMessage = {
-      role: "assistant",
-      content: aiResponse,
-    };
-
-    chatSession.messages.push(assistantMessage);
-
+    // Save updated chat
     await chatSession.save();
 
     res.status(200).json({
@@ -102,62 +77,49 @@ export const createChat = async (req, res) => {
       title: chatSession.title,
     });
   } catch (error) {
-    console.error("Error in chat.controller:", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    handleError(error, res);
   }
 };
 
-export const getChatSessions = async (req, res) => {
+// Update chat title
+export const updateChatTitle = async (req, res) => {
   const userId = req.user._id.toString();
+  const { chatId, title } = req.body;
 
   try {
-    if (!userId) {
-      return res.status(400).json({ message: "Please provide userId" });
+    if (!chatId || !title) {
+      throw new ChatError("Chat ID and title are required", 400);
     }
 
-    const chatSessions = await Chat.find({ userId }, "chatId title updatedAt", {
-      sort: { updatedAt: -1 },
-    });
-    // const chatSessions = await Chat.find({ userId }).select(
-    //   "chatId title createdAt updatedAt"
-    // );
-
-    if (!chatSessions || chatSessions.length === 0) {
-      return res.status(404).json({ message: "No chat sessions found" });
-    }
-
-    res.status(200).json(chatSessions);
-  } catch (error) {
-    console.error("Error in /chat/s", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
-};
-
-export const getChatHistory = async (req, res) => {
-  const { chatId } = req.params;
-  const userId = req.user._id.toString();
-
-  try {
-    if (!chatId || !userId) {
-      return res
-        .status(400)
-        .json({ message: "Chat ID and User ID are required." });
-    }
-
-    const chatSession = await Chat.findOne({
+    const updatedChat = await chatService.updateChatTitle(
+      userId,
       chatId,
-      userId: userId,
-    });
+      title
+    );
 
-    if (!chatSession) {
-      return res
-        .status(404)
-        .json({ message: "Chat session not found or access denied." });
+    res.status(200).json({
+      chatId: updatedChat.chatId,
+      title: updatedChat.title,
+    });
+  } catch (error) {
+    handleError(error, res);
+  }
+};
+
+// Delete chat session
+export const deleteChat = async (req, res) => {
+  const userId = req.user._id.toString();
+  const { chatId } = req.params;
+
+  try {
+    if (!chatId) {
+      throw new ChatError("Chat ID is required", 400);
     }
 
-    res.status(200).json(chatSession);
+    await chatService.deleteChat(userId, chatId);
+
+    res.status(200).json({ message: "Chat deleted successfully" });
   } catch (error) {
-    console.error("Error in /c/:chatId:", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    handleError(error, res);
   }
 };

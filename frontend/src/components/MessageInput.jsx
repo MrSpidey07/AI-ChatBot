@@ -1,16 +1,26 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Send } from "lucide-react";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const { sendMessage, isMessagesLoading, selectedChat } = useChatStore();
+  const lastSubmissionTime = useRef(0);
+  const SUBMISSION_DELAY = 1000; // 1 second cooldown between submissions
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
+
+    // Check if enough time has passed since last submission
+    const now = Date.now();
+    if (now - lastSubmissionTime.current < SUBMISSION_DELAY) {
+      return;
+    }
+
     if (!text.trim() || isMessagesLoading) return;
 
     try {
+      lastSubmissionTime.current = now;
       await sendMessage(text.trim());
       setText("");
     } catch (error) {
@@ -19,21 +29,58 @@ const MessageInput = () => {
     }
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter") {
+      // If shift+enter is pressed, add a newline
+      if (e.shiftKey) {
+        e.preventDefault();
+        const cursorPosition = e.target.selectionStart;
+        const textBeforeCursor = text.substring(0, cursorPosition);
+        const textAfterCursor = text.substring(cursorPosition);
+        setText(textBeforeCursor + "\n" + textAfterCursor);
+
+        // Set cursor position after the new line
+        setTimeout(() => {
+          e.target.selectionStart = cursorPosition + 1;
+          e.target.selectionEnd = cursorPosition + 1;
+        }, 0);
+      } else {
+        // Regular enter press submits the form
+        e.preventDefault();
+        handleSendMessage(e);
+      }
+    }
+  };
+
+  const autoResizeTextarea = (e) => {
+    e.target.style.height = "auto";
+    e.target.style.height = `${Math.min(e.target.scrollHeight, 200)}px`;
+  };
+
   return (
     <div className="p-4 w-full">
       <form onSubmit={handleSendMessage} className="flex items-center gap-3">
         <div className="flex-1 flex gap-2">
-          <input
-            type="text"
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
+          <textarea
+            className="w-full input input-bordered rounded-lg input-sm sm:input-md resize-none min-h-[44px] pt-1.5"
             placeholder={
               selectedChat
-                ? "Replay to this chat..."
+                ? "Reply to this chat..."
                 : "How can I help you today?"
             }
             value={text}
-            onChange={(e) => setText(e.target.value)}
+            onChange={(e) => {
+              setText(e.target.value);
+              autoResizeTextarea(e);
+            }}
+            onKeyDown={handleKeyDown}
             disabled={isMessagesLoading}
+            rows={1}
+            style={{
+              height: "auto",
+              maxHeight: "200px",
+              overflowY: "auto",
+            }}
           />
         </div>
         <button

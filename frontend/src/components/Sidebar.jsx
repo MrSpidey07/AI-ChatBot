@@ -1,3 +1,4 @@
+import toast from "react-hot-toast";
 import { useChatStore } from "../store/useChatStore";
 import SideBarSkeleton from "./skeletons/SideBarSkeleton";
 import { LucideEllipsis, MessageSquare, SquarePlus } from "lucide-react";
@@ -47,7 +48,14 @@ const Sidebar = () => {
             <div className="hidden lg:block text-left min-w-0">
               <div className="font-normal truncate">{chat.title}</div>
             </div>
-            <LucideEllipsis className="size-6" />
+            <button onClick={(e) => e.stopPropagation()}>
+              <LucideEllipsis
+                className="size-5"
+                onClick={() => {
+                  toast("Coming Soon!", { icon: "🚀" });
+                }}
+              />
+            </button>
           </button>
         ))}
       </div>
