@@ -3,16 +3,18 @@ import User from "../models/user.model.js";
 
 export const protectedRoute = async (req, res, next) => {
   try {
-    const token = req.cookies.token;
+    const authHeader = req.headers.authorization;
 
-    if (!token) {
-      return res.status(401).json({ message: "No token" });
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "No token provided" });
     }
+
+    const token = authHeader.split(" ")[1];
 
     const checkToken = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
     if (!checkToken) {
-      return res.status(401).json({ message: "Internal Server Error" });
+      return res.status(401).json({ message: "Invalid token" });
     }
 
     const user = await User.findById(checkToken.userId).select("-password");
@@ -26,6 +28,6 @@ export const protectedRoute = async (req, res, next) => {
     next();
   } catch (error) {
     console.log("Error in Auth Middelware", error);
-    res.status(500).json({ message: "Internal Server Error" });
+    res.status(500).json({ message: "Authentication failed" });
   }
 };

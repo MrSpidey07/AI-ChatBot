@@ -15,9 +15,10 @@ export const login = async (req, res) => {
       return res.status(400).json({ message: "Invalid Credentials" });
     }
 
-    generateToken(user._id, res);
+    //generateToken(user._id, res);
+    const token = generateToken(user._id);
 
-    return res.status(200).json({ message: "User login Succesfull" });
+    return res.status(200).json({ message: "User login Succesfull", token });
   } catch (error) {
     console.log("Error in Login", error);
     return res.status(500).json({ message: "Internal Server Error" });
@@ -57,9 +58,9 @@ export const register = async (req, res) => {
     });
 
     if (newUser) {
-      generateToken(newUser._id, res);
+      const token = generateToken(newUser._id, res);
       await newUser.save();
-      res.status(201).json({ message: "User created successfully" });
+      res.status(201).json({ message: "User created successfully", token });
     } else {
       res.status(400).json({ message: "Error creating user" });
     }
@@ -71,7 +72,7 @@ export const register = async (req, res) => {
 
 export const logout = async (req, res) => {
   try {
-    res.cookie("token", "", { maxAge: 0 });
+    //res.cookie("token", "", { maxAge: 0 });
     res.status(200).json({ message: "Loged Out Succesfully" });
   } catch (error) {
     console.log("Logout Error", error);
