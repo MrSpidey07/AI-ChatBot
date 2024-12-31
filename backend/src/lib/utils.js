@@ -12,8 +12,8 @@ export const generateToken = (userId, res) => {
     httpOnly: true,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     sameSite: "none",
-    secure: true,
-    domain: process.env.COOKIE_DOMAIN,
+    secure: process.env.NODE_ENV !== "development",
+    path: "/",
   });
 
   return token;
