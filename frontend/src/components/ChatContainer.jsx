@@ -4,6 +4,7 @@ import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
 import MessageSkeleton from "./skeletons/MessageSkeleton";
 import MessageContent from "./MessageContent";
+import { ArrowDown } from "lucide-react";
 
 const ChatContainer = () => {
   const {
@@ -94,10 +95,13 @@ const ChatContainer = () => {
       </div>
       {showScrollButton && (
         <button
-          className="fixed bottom-14 right-20 bg-blue-400 w-10 text-white p-2 rounded-full shadow-lg hover:bg-blue-600"
           onClick={scrollToBottom}
+          className="fixed z-50 bottom-20 right-4 sm:right-8 md:right-12 
+                 btn btn-circle btn-primary shadow-lg
+                 transition-opacity duration-300 hover:scale-110"
+          aria-label="Scroll to bottom"
         >
-          ↓
+          <ArrowDown size={20} />
         </button>
       )}
 

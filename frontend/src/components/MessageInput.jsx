@@ -58,11 +58,15 @@ const MessageInput = () => {
   };
 
   return (
-    <div className="p-4 w-full">
-      <form onSubmit={handleSendMessage} className="flex items-center gap-3">
-        <div className="flex-1 flex gap-2">
+    <div className="w-full bg-base-100 border-t border-base-300 p-3 sm:p-4">
+      <form
+        onSubmit={handleSendMessage}
+        className="flex items-center gap-2 sm:gap-3 max-w-4xl mx-auto"
+        onClick={(e) => e.stopPropagation()} // Stop event propagation
+      >
+        <div className="flex-1">
           <textarea
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md resize-none min-h-[44px] pt-1.5"
+            className="w-full input input-bordered rounded-lg input-sm sm:input-md resize-none min-h-[40px] sm:min-h-[44px] pt-1 placeholder-opacity-70"
             placeholder={
               selectedChat
                 ? "Reply to this chat..."
@@ -70,10 +74,15 @@ const MessageInput = () => {
             }
             value={text}
             onChange={(e) => {
+              e.stopPropagation(); // Stop event propagation
               setText(e.target.value);
               autoResizeTextarea(e);
             }}
-            onKeyDown={handleKeyDown}
+            onKeyDown={(e) => {
+              e.stopPropagation(); // Stop event propagation
+              handleKeyDown(e);
+            }}
+            onClick={(e) => e.stopPropagation()} // Stop event propagation
             disabled={isMessagesLoading}
             rows={1}
             style={{
@@ -85,13 +94,14 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className="btn btn-sm btn-circle w-11 h-11"
+          className="btn btn-sm sm:btn-md btn-circle"
           disabled={!text.trim() || isMessagesLoading}
+          onClick={(e) => e.stopPropagation()} // Stop event propagation
         >
           {isMessagesLoading ? (
             <span className="loading loading-spinner"></span>
           ) : (
-            <Send size={22} />
+            <Send className="size-5 sm:size-6" />
           )}
         </button>
       </form>

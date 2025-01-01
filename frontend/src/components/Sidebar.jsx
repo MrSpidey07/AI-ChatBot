@@ -1,30 +1,31 @@
 import toast from "react-hot-toast";
 import { useChatStore } from "../store/useChatStore";
 import SideBarSkeleton from "./skeletons/SideBarSkeleton";
+import PropTypes from "prop-types";
 import { LucideEllipsis, MessageSquare, SquarePlus } from "lucide-react";
 
-const Sidebar = () => {
+const Sidebar = ({ className = "" }) => {
   const { chats, setSelectedChat, selectedChat, isChatsLoading } =
     useChatStore();
 
   if (isChatsLoading) return <SideBarSkeleton />;
 
   return (
-    <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
+    <aside
+      className={`h-full w-80 border-r border-base-300 flex flex-col bg-base-100 ${className}`}
+    >
       <div className="border-b border-base-300 w-full p-5">
         <div className="flex items-center gap-2 justify-between">
           <div className="flex items-center gap-2">
             <MessageSquare className="size-6" />
-            <span className="font-medium hidden lg:block">Chats</span>
+            <span className="font-medium">Chats</span>
           </div>
           <div className="flex items-center gap-2">
             <button
-              className="size-6 cursor-pointer"
-              onClick={() => {
-                setSelectedChat(null);
-              }}
+              className="btn btn-ghost btn-sm"
+              onClick={() => setSelectedChat(null)}
             >
-              <SquarePlus />
+              <SquarePlus className="size-6" />
             </button>
           </div>
         </div>
@@ -45,22 +46,27 @@ const Sidebar = () => {
               }
             `}
           >
-            <div className="hidden lg:block text-left min-w-0">
+            <div className="text-left min-w-0">
               <div className="font-normal truncate">{chat.title}</div>
             </div>
-            <button onClick={(e) => e.stopPropagation()}>
-              <LucideEllipsis
-                className="size-5"
-                onClick={() => {
-                  toast("Coming Soon!", { icon: "🚀" });
-                }}
-              />
+            <button
+              className="btn btn-ghost btn-sm p-2"
+              onClick={(e) => {
+                e.stopPropagation();
+                toast("Coming Soon!", { icon: "🚀" });
+              }}
+            >
+              <LucideEllipsis className="size-5" />
             </button>
           </button>
         ))}
       </div>
     </aside>
   );
+};
+
+Sidebar.propTypes = {
+  className: PropTypes.string.isRequired,
 };
 
 export default Sidebar;
