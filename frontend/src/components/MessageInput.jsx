@@ -1,37 +1,51 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useCallback, useEffect } from "react";
 import { useChatStore } from "../store/useChatStore";
 import { Send } from "lucide-react";
+import debounce from "lodash/debounce";
 
 const MessageInput = () => {
   const [text, setText] = useState("");
   const { sendMessage, isMessagesLoading, selectedChat } = useChatStore();
   const lastSubmissionTime = useRef(0);
+  const isSubmitting = useRef(false);
   const SUBMISSION_DELAY = 1000; // 1 second cooldown between submissions
+
+  const debouncedSendMessage = useCallback(
+    debounce(async (messageText) => {
+      if (isSubmitting.current) return;
+
+      try {
+        isSubmitting.current = true;
+        await sendMessage(messageText);
+        setText("");
+      } catch (error) {
+        console.error("Failed to send message:", error);
+      } finally {
+        isSubmitting.current = false;
+        lastSubmissionTime.current = Date.now();
+      }
+    }, 300), // 300ms debounce
+    [sendMessage]
+  );
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
 
-    // Check if enough time has passed since last submission
-    const now = Date.now();
-    if (now - lastSubmissionTime.current < SUBMISSION_DELAY) {
+    if (
+      !text.trim() ||
+      isMessagesLoading ||
+      isSubmitting.current ||
+      Date.now() - lastSubmissionTime.current < SUBMISSION_DELAY
+    ) {
       return;
     }
 
-    if (!text.trim() || isMessagesLoading) return;
-
-    try {
-      lastSubmissionTime.current = now;
-      await sendMessage(text.trim());
-      setText("");
-    } catch (error) {
-      console.error("Failed to send message:", error);
-      //toast.error("Failed to send message. Please try again.");
-    }
+    debouncedSendMessage(text.trim());
   };
 
   const handleKeyDown = (e) => {
     if (e.key === "Enter") {
-      // If shift+enter is pressed, add a newline
+      // Handle shift+enter for new line
       if (e.shiftKey) {
         e.preventDefault();
         const cursorPosition = e.target.selectionStart;
@@ -45,12 +59,18 @@ const MessageInput = () => {
           e.target.selectionEnd = cursorPosition + 1;
         }, 0);
       } else {
-        // Regular enter press submits the form
+        // Prevent default to stop form submission on mobile
         e.preventDefault();
         handleSendMessage(e);
       }
     }
   };
+
+  useEffect(() => {
+    return () => {
+      debouncedSendMessage.cancel();
+    };
+  }, [debouncedSendMessage]);
 
   const autoResizeTextarea = (e) => {
     e.target.style.height = "auto";
@@ -63,6 +83,11 @@ const MessageInput = () => {
         onSubmit={handleSendMessage}
         className="flex items-center gap-2 sm:gap-3 max-w-4xl mx-auto"
         onClick={(e) => e.stopPropagation()} // Stop event propagation
+        onTouchStart={(e) => {
+          if (isSubmitting.current) {
+            e.preventDefault();
+          }
+        }}
       >
         <div className="flex-1">
           <textarea
@@ -74,16 +99,13 @@ const MessageInput = () => {
             }
             value={text}
             onChange={(e) => {
-              e.stopPropagation(); // Stop event propagation
               setText(e.target.value);
               autoResizeTextarea(e);
             }}
             onKeyDown={(e) => {
-              e.stopPropagation(); // Stop event propagation
               handleKeyDown(e);
             }}
-            onClick={(e) => e.stopPropagation()} // Stop event propagation
-            disabled={isMessagesLoading}
+            disabled={isMessagesLoading || isSubmitting.current}
             rows={1}
             style={{
               height: "auto",
@@ -95,8 +117,7 @@ const MessageInput = () => {
         <button
           type="submit"
           className="btn btn-sm sm:btn-md btn-circle"
-          disabled={!text.trim() || isMessagesLoading}
-          onClick={(e) => e.stopPropagation()} // Stop event propagation
+          disabled={!text.trim() || isMessagesLoading || isSubmitting.current}
         >
           {isMessagesLoading ? (
             <span className="loading loading-spinner"></span>
