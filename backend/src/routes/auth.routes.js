@@ -10,6 +10,10 @@ import { protectedRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
 
+router.get("/alive", (req, res) => {
+  res.status(200).json({ message: "Server is alive" });
+});
+
 router.post("/login", login);
 
 router.post("/signup", register);
