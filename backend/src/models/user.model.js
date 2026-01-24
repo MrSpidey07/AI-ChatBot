@@ -16,6 +16,18 @@ const userSchema = new mongoose.Schema(
       required: true,
       minilength: 6,
     },
+    opt: {
+      type: String,
+      default: null,
+    },
+    optExpiry: {
+      type: Date,
+      default: null,
+    },
+    isVerified: {
+      type: Boolean,
+      default: false,
+    },
   },
   { timestamps: true }
 );
