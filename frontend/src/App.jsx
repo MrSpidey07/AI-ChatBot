@@ -4,17 +4,19 @@ import HomePage from "./pages/HomePage";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import ForgotPassword from "./pages/ForgotPassword";
+import AuthAction from "./pages/AuthAction";
 import { useAuthStore } from "./store/useAuthStore";
 import { useEffect } from "react";
 import { Loader } from "lucide-react";
 import { Toaster } from "react-hot-toast";
 
 const App = () => {
-  const { authUser, checkAuth, isCheckingAuth } = useAuthStore();
+  const { authUser, isCheckingAuth, initializeAuthListener } = useAuthStore();
 
   useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
+    // Initialize Firebase auth state listener
+    initializeAuthListener();
+  }, [initializeAuthListener]);
 
   console.log({ authUser });
 
@@ -45,6 +47,8 @@ const App = () => {
           path="/forgot-password"
           element={!authUser ? <ForgotPassword /> : <Navigate to="/" />}
         ></Route>
+        {/* Firebase Action Handler - handles email verification & password reset */}
+        <Route path="/auth/action" element={<AuthAction />}></Route>
       </Routes>
 
       <Toaster></Toaster>

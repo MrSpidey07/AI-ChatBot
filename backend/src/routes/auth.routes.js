@@ -5,6 +5,8 @@ import {
   logout,
   forgotPassword,
   checkAuth,
+  resendOtp,
+  verifyOtp,
 } from "../controller/auth.controller.js";
 import { protectedRoute } from "../middleware/auth.middleware.js";
 
@@ -17,6 +19,10 @@ router.get("/alive", (req, res) => {
 router.post("/login", login);
 
 router.post("/signup", register);
+
+router.post("/resend-otp", resendOtp);
+
+router.post("/verify-otp", verifyOtp);
 
 router.post("/forgot-password", forgotPassword);
 
