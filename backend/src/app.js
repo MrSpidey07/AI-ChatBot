@@ -11,7 +11,6 @@ const port = process.env.PORT || 5001;
 const app = express();
 
 //Middelwares
-//app.set("view engine", "ejs");
 app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -27,11 +26,6 @@ app.use(
 //Routes
 app.use("/api/auth", authRouter);
 app.use("/api", chatbotRouter);
-
-//Homepage
-// app.get("/", (req, res) => {
-//   res.render("index");
-// });
 
 app.listen(port, () => {
   console.log("Server is running on port http://localhost:" + port);
